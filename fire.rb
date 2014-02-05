@@ -1,3 +1,5 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
+
 class Fire < Tank
   COLORS=%w{994400 AA4400 BB4400 CC4400 DD4400 EE4400 FF4400 FFAA00 FFBB88 FFCCAA}
   def initialize(x,y) 
