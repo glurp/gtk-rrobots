@@ -1,3 +1,4 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
 
 class Bullet < Tank
   def initialize(origine,x0,y0,dir) 
