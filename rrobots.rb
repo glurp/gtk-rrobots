@@ -1,3 +1,5 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
+
 require_relative '../Ruiby/lib/Ruiby'
 
 require_relative 'mobile'
