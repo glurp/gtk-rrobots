@@ -1,2 +1,9 @@
-0.1.1
+0.1.2
+    tanks.rb : Comment for change in bullet.rb : license in header
+    tank.rb : LF in bullet.rb
+    rrobots.rb : Comment for change in bullet.rb : license in header
+    obstacles.rb : LF in bullet.rb
+    mobile.rb : Comment for change in bullet.rb : license in header
+    fire.rb : LF in bullet.rb
+    bullet.rb : license in header
     Rakefile.rb : to rrobots
