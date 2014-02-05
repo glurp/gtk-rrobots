@@ -1,3 +1,5 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
+
 class Obstacle < Tank
   def initialize(x,y,r) 
     super(x,y,"#FFAA00") ; 
