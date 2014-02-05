@@ -1,3 +1,4 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
 
 class Mobile
   attr_reader :x,:y,:cdir,:cradar
