@@ -1,3 +1,4 @@
+# Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
 
 # a tank have
 #   a move direction, a speed 
