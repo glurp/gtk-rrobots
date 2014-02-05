@@ -1,5 +1,5 @@
 # Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
-# LGPL
+
 #################################################################
 #  Rakefile : git commit/add ; git push, test/spec & gem push
 #################################################################
@@ -67,8 +67,8 @@ end
 def verification_file(fn)
   return unless File.extname(fn)==".rb"
   content=File.read(fn)[0..600]
-  unless content =~ /BY-SA/ && content =~ /LGPL/
-    puts "\nFile #{fn} seem not contain licenses data (LGPL/BY-SA)\n"   
+  unless content =~ /BY-SA/ 
+    puts "\nFile #{fn} seem not contain licenses data (CC BY-SA)\n"   
     exit(0)
   end
 end
