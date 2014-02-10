@@ -8,7 +8,7 @@ class Bullet < Tank
   def draw(w,cr)
     w.draw_circle(@x,@y,3,@coul,@coul) 
   end
-  def anim()
+  def anim(c)
     move()
     if x==0 || y==0 ||x==200 || y==200
       $app.dead(self)
