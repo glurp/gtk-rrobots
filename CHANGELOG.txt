@@ -1,4 +1,11 @@
-0.1.3
+0.1.4
+    tanks.rb : anim with time argument
+    tank.rb : tick() creation
+    rrobots.rb : anim with time argument
+    obstacles.rb : anim with time argument
+    mobile.rb : tick() creation
+    fire.rb : anim with time argument
+    bullet.rb : anim with time argument
     tanks.rb : TankEvil creation
     tank.rb : fire definition
     rrobots.rb : acces to source code of a tank
