@@ -5,7 +5,7 @@ class TankGamer < Tank ; end
 class TankManuel < TankGamer
 
   def initialize(x,y,coul="#FF0000") super(x,y,coul) ; end
-  def anim()
+  def anim(c)
     turn_radar(Math::PI/360)
     accelerate(0.95)
     move()
@@ -20,7 +20,7 @@ class TankDuck < TankGamer
     @cradar=0
   end
   def tank?() true end
-  def anim()
+  def anim(c)
      #turn_radar(0.5*Math::PI/360)
      turn_to(Math::PI/16.0)
      move()
@@ -36,7 +36,7 @@ class TankEvil < TankGamer
     turn(rand(100))
   end
   def tank?() true end
-  def anim()
+  def anim(c)
      turn_radar(0.5*Math::PI/360)
      turn(Math::PI/260.0)
      move()
@@ -55,7 +55,7 @@ class TankDuck3 < TankGamer
     @cradar=0
   end
   def tank?() true end
-  def anim()
+  def anim(c)
      #turn_radar(0.5*Math::PI/360)
      turn_to(Math::PI/16.0)
      move()
