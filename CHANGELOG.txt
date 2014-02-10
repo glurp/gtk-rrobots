@@ -1,4 +1,8 @@
-0.1.2
+0.1.3
+    tanks.rb : TankEvil creation
+    tank.rb : fire definition
+    rrobots.rb : acces to source code of a tank
+    mobile.rb : angle() : normalyse 
     tanks.rb : Comment for change in bullet.rb : license in header
     tank.rb : LF in bullet.rb
     rrobots.rb : Comment for change in bullet.rb : license in header
