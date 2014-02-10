@@ -10,6 +10,7 @@
 class Tank < Mobile 
   def initialize(x,y,coul="#AA0000")
     super
+    @state=""
     @count_bullet=0
   end
   # draw radar, body+wheels, cannon
@@ -35,7 +36,11 @@ class Tank < Mobile
   end
   def dead_bullet()  @count_bullet-=1 end
   def count_bullet() @count_bullet end
-  def anim
+  def tick(n)
+    meth="anim_#{@state}"
+    self.respond_to?(meth) ? send(meth,n) : anim(n)
+  end
+  def anim(c)
     move
   end
   def fire_good?
@@ -47,5 +52,11 @@ class Tank < Mobile
       d= h*Math.sin(aa)
       d.abs<10
     }.size>0
+  end
+  def tir(condition,option,&blk)
+     if confition  && option[:state]
+        @state=option[:state]
+        blk.call
+     end
   end
 end
