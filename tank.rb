@@ -23,8 +23,12 @@ class Tank < Mobile
     }
     w.draw_line([@x,@y,@x+10*Math.cos(@cdir),@y+10*Math.sin(@cdir)],"#000000")
   end
-  def turn_cannon(dr) @cdir+=dr end
-  def turn_radar(dr)  @cradar+=dr end
+  def turn_cannon(dr)
+    @cdir=angle(@cdir+dr) 
+  end
+  def turn_radar(dr)  
+      @cradar=angle(@cradar+dr) 
+  end
   def fire
     @count_bullet+=1
     $app.creatBullet(self,@x,@y,@cdir)
@@ -33,5 +37,15 @@ class Tank < Mobile
   def count_bullet() @count_bullet end
   def anim
     move
+  end
+  def fire_good?
+    $app.each_tank(self).select { |t|
+      dx,dy=t.x-x, t.y-y
+      h=Math.sqrt(dx*dx+dy*dy)
+      b=Math.atan2(dy,dx)
+      aa=angle(b-@cradar)
+      d= h*Math.sin(aa)
+      d.abs<10
+    }.size>0
   end
 end
