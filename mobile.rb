@@ -6,6 +6,7 @@ class Mobile
   def obstacle?() false end  
   def initialize(x,y,coul="#AA0000")
     @x,@y,@coul=x,y,coul
+    @count=0
     @v=0
     @a,@cdir,@cradar=0,0,0
     @parent
@@ -51,6 +52,16 @@ class Mobile
   def mindist?()
      x<5 || y<5 || x>195 || y>195
   end
-  def anim()
+  def _anim()
+    if self.respond_to?(:tick)
+      s=@state
+      tick(@count)
+      if @state!=s
+        @count=0
+      end
+    else
+      anim(@count)
+    end
+    @count+=1
   end
 end
