@@ -13,7 +13,7 @@ class Fire < Tank
       w.draw_circle(@x-2+rand(4),@y-2+rand(4),r+3,"#"+COLORS[r],"#"+COLORS[r]) rescue nil
     }
   end
-  def anim    
+  def anim(c)
     @r=[@r0+rand(3),COLORS.size].min
     @r0+=1
     $app.dead(self) if @r0>=COLORS.size
