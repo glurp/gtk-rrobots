@@ -51,7 +51,7 @@ class T < Tank
     @cradar=0
   end
   def tank?() true end
-  def anim()
+  def anim(c)
      #turn_radar(0.5*Math::PI/360)
      turn_to(Math::PI/16.0)
      move()
@@ -114,7 +114,7 @@ EEND
       load "tank.rb"
     }
   end
-  anim(40) {  @ltank.each { |t| t.anim } ; @cv.redraw } 
+  anim(40) {  @ltank.each { |t| t._anim } ; @cv.redraw } 
   def run_game(klass_namame) 
     klass= (eval(klass_namame) rescue nil)
     return unless  klass
