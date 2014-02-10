@@ -12,6 +12,6 @@ class Obstacle < Tank
   def draw(w,cr)
     w.draw_circle(@x,@y,@r,"#AAAAAA","#BBBBBB") 
   end
-  def anim
+  def anim(c)
   end
 end
