@@ -136,7 +136,7 @@ EEND
     @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
     @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
     @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
-    4.times { @ltank << Obstacle.new(rand(0..$W),rand(0..$H),rand(3..15)) }
+    #4.times { @ltank << Obstacle.new(rand(0..$W),rand(0..$H),rand(3..15)) }
     @status_game=1
   end
   class << $app
