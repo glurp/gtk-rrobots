@@ -16,47 +16,27 @@ class Tank < Mobile
   # draw radar, body+wheels, cannon
   def draw(w,cr)
     #p [self.class,@coul]
-    w.draw_line([@x,@y,@x+300*Math.cos(@cradar),@y+300*Math.sin(@cradar)],"#00A000") if @cradar!=0
-    w.rotation(@x,@y,@a) { 
+    w.draw_line([@x,@y,@x+300*cos(@cradar),@y+300*sin(@cradar)],"#00A000") if @cradar!=0
+    w.rotation(@x,@y,deg2rd(@a)) { 
       w.draw_rectangle(-5,-5,10,10,0,@coul,@coul) 
       w.draw_line([-7,-5,+7,-5],"#000000",2) 
       w.draw_line([-7,+5,+7,+5],"#000000",2) 
     }
-    w.draw_line([@x,@y,@x+10*Math.cos(@cdir),@y+10*Math.sin(@cdir)],"#000000")
+    w.draw_line([@x,@y,@x+10*cos(@cdir),@y+10*sin(@cdir)],"#000000")
   end
-  def turn_cannon(dr)
-    @cdir=angle(@cdir+dr) 
-  end
-  def turn_radar(dr)  
-      @cradar=angle(@cradar+dr) 
-  end
-  def fire
-    @count_bullet+=1
-    $app.creatBullet(self,@x,@y,@cdir)
-  end
-  def dead_bullet()  @count_bullet-=1 end
-  def count_bullet() @count_bullet end
-  def tick(n)
-    meth="anim_#{@state}"
-    self.respond_to?(meth) ? send(meth,n) : anim(n)
-  end
-  def anim(c)
-    move
-  end
+  def turn_cannon(dr) @cdir=alimit(@cdir+dr)       end
+  def turn_radar(dr)  @cradar=alimit(@cradar+dr)   end
+  def dead_bullet()   @count_bullet-=1  ; p "deadb"           end
+  def count_bullet()  @count_bullet                end
+  def fire()          (@count_bullet+=1 ; $app.creatBullet(self,@x,@y,@cdir)) if @count_bullet<6 end
   def fire_good?
-    $app.each_tank(self).select { |t|
-      dx,dy=t.x-x, t.y-y
-      h=Math.sqrt(dx*dx+dy*dy)
-      b=Math.atan2(dy,dx)
-      aa=angle(b-@cradar)
-      d= h*Math.sin(aa)
-      d.abs<10
-    }.size>0
+    $app.each_tank(self).select { |t| inline?(t,10) }.size>0
   end
   def tir(condition,option,&blk)
-     if confition  && option[:state]
-        @state=option[:state]
-        blk.call
+     if condition  
+        puts "tir to #{option[:state]}..."
+        to_state(option[:state])
+        blk.call if blk
      end
   end
 end
