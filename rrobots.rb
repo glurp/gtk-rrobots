@@ -9,6 +9,8 @@ require_relative 'fire'
 require_relative 'tanks'
 require_relative 'obstacles'
 
+$W=500
+$H=500
 
 def source_class(klass)
   lsm = (klass.methods(false).map{|m| klass.method(m)} +
@@ -42,7 +44,7 @@ class Test
   end
 end
 
-Ruiby.app width: 500, height: 200, title: "RRobots" do
+Ruiby.app width: 300+$W, height: $H+50, title: "RRobots" do
   src=Ruiby.stock_get("source",<<'EEND')
 class T < Tank
   def initialize(x,y,coul="#4444FF") 
@@ -52,50 +54,44 @@ class T < Tank
   end
   def tank?() true end
   def anim(c)
-     #turn_radar(0.5*Math::PI/360)
-     turn_to(Math::PI/16.0)
+     turn_to(1)
      move()
   end
 end
 EEND
   $app=self
+  @announce=""
+  @status_game=0
   @ltank =[]
   def_style "* { font-size: 10px;}"
   stack do
   flow do
     stack do
-      @ed=source_editor(width:300, height:400) 
+      @ed=source_editor(width:400, height:500) 
       @ed.editor.buffer.text=src
       flowi do
-         button("Syntax test ")  { Test.test @ed.editor.buffer.text }
-         button("Replace current player") { eval @ed.editor.buffer.text }
+         button("Syntax test ")  { 
+           Ruiby.stock_put("source",@ed.editor.buffer.text)
+           Test.test @ed.editor.buffer.text 
+         }
+         button("Replace current player") { 
+           Ruiby.stock_put("source",@ed.editor.buffer.text)
+           begin
+              eval @ed.editor.buffer.text 
+           rescue Exception => e
+              error(e)
+           end
+        }
       end
     end if true
     stacki do
-      @cv=canvas(200,200) do 
-
+      @cv=sloti(canvas($W,$H) do 
         on_canvas_draw { |w,cr|   
           w.init_ctx("#000000","#005050",1)
           @ltank.each { |t| t.draw(w,cr) } 
+          w.draw_text(10,40,@announce,3,"#FF5577") if @announce.size>0
         }
-        on_canvas_button_press { |w,e|  
-          next unless @t
-          dx=(e.x-@t.x)
-          dy=(e.y-@t.y)
-          a=Math.atan2(dy,dx)
-          @t.turn_to( a ) 
-          @t.accelerate(1.05)
-          w.redraw 
-        }
-        on_canvas_key_press { |w,e,k| 
-          next unless @t
-          da,dr={"Left"=>[-1,0],"Right"=>[1,0],"Up"=>[0,-1],"Down"=>[0,1]}[k]||[0,0]
-          @t.turn_cannon(da*Math::PI/36) ; @t.turn_radar(dr*Math::PI/36)  
-          @t.accelerate(1.05) if k=="a"
-          @t.turn(Math::PI/180.0) if k=="q"
-          @t.fire() if k=="space"
-        } if true
-      end
+      end)
       stack {
         lTanks=ObjectSpace.each_object(::Class).select {|klass| klass < TankGamer ? klass: nil}.map {|c|c.to_s}
         labeli("Play with :")
@@ -114,7 +110,17 @@ EEND
       load "tank.rb"
     }
   end
-  anim(40) {  @ltank.each { |t| t._anim } ; @cv.redraw } 
+  anim(40) {  
+    @ltank.each { |t| t._anim } if @status_game <2
+    @announce=case @status_game
+        when 0 then "Waiting to Start"
+        when 1 then ""
+        when 2 then "Bravo !!!"
+        when 3 then "Game over ;("
+    end
+    @cv.redraw 
+    end_game() if  @ltank.size==1
+  } 
   def run_game(klass_namame) 
     klass= (eval(klass_namame) rescue nil)
     return unless  klass
@@ -126,27 +132,32 @@ EEND
        return
     end
     @ltank =[]
-    @ltank << @t=tclass.new(rand(20..180),rand(20..180))
-    @ltank << klass.new(50+rand(140),50+rand(140)) 
-    @ltank << klass.new(50+rand(140),50+rand(140)) 
-    @ltank << klass.new(50+rand(140),50+rand(140)) 
-    #4.times { @ltank << Obstacle.new(rand(0..200),rand(0..200),rand(3..15)) }
+    @ltank << @player=tclass.new(rand(20..180),rand(20..180))
+    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
+    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
+    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
+    4.times { @ltank << Obstacle.new(rand(0..$W),rand(0..$H),rand(3..15)) }
+    @status_game=1
   end
   class << $app
     def creatBullet(o,x,y,dir)  @ltank << Bullet.new(o,x,y,dir)  end
-    def kill(o,t) 
+    def kill(t) 
       unless t.obstacle? 
         fire(t.x,t.y)
         dead(t)
       end
     end
-    def dead(o)       @ltank.delete(o) end
+    def dead(o)       
+      o.dead
+      @ltank.delete(o) 
+      end_game if o==@player
+    end
     def fire(x,y)     @ltank << Fire.new(x,y) end
     def obstacle?(o) 
       @ltank.any? { |t|  t!=o && t.obstacle? && t.intersect(o) }  
     end
-    def test_collision(o,x,y)
-      dead(o) if @ltank.any? { |t|  (t!=o && ! o.childr?(t) && (t.tank? || t.obstacle?) && t.intersect(o)) ? (kill(o,t); ;true) : false }  
+    def test_collision(o)
+      dead(o) if @ltank.any? { |t|  (t!=o && ! o.childr?(t) && (t.tank? || t.obstacle?) && t.intersect(o)) ? (kill(t); true) : false }  
     end
     def each_tank(o)
        if block_given?
@@ -154,6 +165,11 @@ EEND
        else
          @ltank.select { |t|  (t!=o && t.tank? ) }.each  
        end
+    end
+    def end_game()
+     ok= (@ltank.size==1 && @ltank.first==@player)
+     @status_game = ok ? 2 : 3
+     #@ltank=[]
     end
   end
 end
