@@ -1,4 +1,9 @@
-0.1.4
+0.1.5
+    tanks.rb : genie creation
+    tank.rb : refactor
+    rrobots.rb : end game detection
+    mobile.rb : geometry class
+    bullet.rb : color
     tanks.rb : anim with time argument
     tank.rb : tick() creation
     rrobots.rb : anim with time argument
