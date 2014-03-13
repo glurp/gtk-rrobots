@@ -17,7 +17,7 @@ class template
         ..use thank api..
      end
      def tick_foo(time)   # called when state==foo
-        ....
+        .... 
      end
     end
     MyThank  # !!! Indispensable !!!
