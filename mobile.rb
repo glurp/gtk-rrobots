@@ -17,13 +17,14 @@ class Geom
      a
   end
   def inline?(t,epsilon)
+      return(false) if t.class == self.class
       dx,dy=t.x-x, t.y-y
       h=Math.sqrt(dx*dx+dy*dy)
       b=atan2(dy,dx)
       aa=alimit(b-@cradar)
       dist= (h*sin(aa)).abs
       is=(dist<epsilon)&& aa<90
-      p({:ee => self.class, :atan2 => b, :adiff => aa}) if is && self.kind_of?(T)
+      #p({:ee => self.class, :atan2 => b, :adiff => aa}) if is && self.kind_of?(T)
       is
   end
 end
