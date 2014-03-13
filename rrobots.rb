@@ -64,6 +64,7 @@ EEND
   @status_game=0
   @ltank =[]
   def_style "* { font-size: 10px;}"
+  def_style "button { background-color: #FF0000;}"
   stack do
   flow do
     stack do
@@ -93,13 +94,15 @@ EEND
         }
       end)
       stack {
+        ctx=  make_StockDynObject("ctx",{"nb_player" => 1, "nb_robots" =>  4})
         lTanks=ObjectSpace.each_object(::Class).select {|klass| klass < TankGamer ? klass: nil}.map {|c|c.to_s}
-        labeli("Play with :")
-        @cb=sloti(combo(lTanks,0)) 
+        flowi { labeli("Play with :",width:150) ; @cb=sloti(combo(lTanks,0))  }
+        flowi { labeli("nb Players:",width:150) ; sloti(islider(ctx.nb_player,min:1,max:30,by:2)) }
+        flowi { labeli("nb Robots:",width:150)  ; sloti(islider(ctx.nb_robots,min:1,max:30,by:2) ) }
         flowi {
           regular
           button("view") { edit(source_class(eval @cb.get_selection()[0])) }
-          button("Go") { run_game(@cb.get_selection()[0]) }
+          button("Go") { run_game(@cb.get_selection()[0],ctx.nb_player.value,ctx.nb_robots.value) }
         }
       }
     end
@@ -121,7 +124,7 @@ EEND
     @cv.redraw 
     end_game() if  @ltank.size==1
   } 
-  def run_game(klass_namame) 
+  def run_game(klass_namame,nbp,nbr) 
     klass= (eval(klass_namame) rescue nil)
     return unless  klass
     Ruiby.stock_put("source",@ed.editor.buffer.text)
@@ -132,10 +135,8 @@ EEND
        return
     end
     @ltank =[]
-    @ltank << @player=tclass.new(rand(20..180),rand(20..180))
-    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
-    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
-    @ltank << klass.new(50+rand($W-50),50+rand($H-50)) 
+    nbp.to_i.times { @ltank << @player=tclass.new(rand(20..$W-20),rand(20..$H-20)) }
+    nbr.to_i.times { @ltank << klass.new(50+rand($W-50),50+rand($H-50)) }
     #4.times { @ltank << Obstacle.new(rand(0..$W),rand(0..$H),rand(3..15)) }
     @status_game=1
   end
@@ -150,13 +151,12 @@ EEND
     def dead(o)       
       o.dead
       @ltank.delete(o) 
-      end_game if o==@player
     end
     def fire(x,y)     @ltank << Fire.new(x,y) end
     def obstacle?(o) 
       @ltank.any? { |t|  t!=o && t.obstacle? && t.intersect(o) }  
     end
-    def test_collision(o)
+    def test_collision(o,parent)
       dead(o) if @ltank.any? { |t|  (t!=o && ! o.childr?(t) && (t.tank? || t.obstacle?) && t.intersect(o)) ? (kill(t); true) : false }  
     end
     def each_tank(o)
@@ -167,7 +167,7 @@ EEND
        end
     end
     def end_game()
-     ok= (@ltank.size==1 && @ltank.first==@player)
+     ok= true || (@ltank.size==1 && @ltank.first==@player)
      @status_game = ok ? 2 : 3
      #@ltank=[]
     end
