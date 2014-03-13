@@ -1,4 +1,5 @@
-0.9.4
+0.9.5
+    README.md : api comments
     README.md : pi comments
     README.md : api documentation
     tanks.rb : creation TbakGenie2
