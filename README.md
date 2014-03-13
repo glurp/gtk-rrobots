@@ -24,6 +24,7 @@ class template
 
 api
 ---
+direction are in degree (0..360), positions are in pixel,speed in pixel/tick
 
     @cdir   cannon direction
     @cradar radar direction
@@ -33,6 +34,7 @@ api
 
     pivot_by(delta_direction)    # change moving, direction dont'move cannon & radar direction
     turn(delta_direction)        # change moving direction with cannon and radar direction
+    turn_to(direction)           # force current move direction
     turn_radar(delta_direction)  # change radar direction
     turn_cannon(delta_direction) # change cannon direction
     mindist?                     # true if game border is reach
@@ -50,7 +52,7 @@ thank commented
 
     class T < Tank
      def initialize(x,y,coul="#FFAABB") 
-        super(x,y,coul) ; 
+        super(x,y,coul) ;  # coul= fill color of thank, x/y : position
         @v= 8              # initial speed
         @cradar=0          # initial directions
         @cible=-1
