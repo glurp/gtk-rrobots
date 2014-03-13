@@ -1,4 +1,9 @@
-0.9.1
+0.9.2
+    tanks.rb : creation TbakGenie2
+    tank.rb : no traces
+    rrobots.rb : slider for choose number of players
+    mobile.rb : no trace
+    bullet.rb : bullet size
     rrobots.rb : obstacle
     tanks.rb : genie creation
     tank.rb : refactor
