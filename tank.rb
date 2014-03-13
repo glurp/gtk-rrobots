@@ -15,8 +15,7 @@ class Tank < Mobile
   end
   # draw radar, body+wheels, cannon
   def draw(w,cr)
-    #p [self.class,@coul]
-    w.draw_line([@x,@y,@x+300*cos(@cradar),@y+300*sin(@cradar)],"#00A000") if @cradar!=0
+    w.draw_line([@x,@y,@x+1000*cos(@cradar),@y+1000*sin(@cradar)],"#007000") if @cradar!=0
     w.rotation(@x,@y,deg2rd(@a)) { 
       w.draw_rectangle(-5,-5,10,10,0,@coul,@coul) 
       w.draw_line([-7,-5,+7,-5],"#000000",2) 
@@ -26,7 +25,7 @@ class Tank < Mobile
   end
   def turn_cannon(dr) @cdir=alimit(@cdir+dr)       end
   def turn_radar(dr)  @cradar=alimit(@cradar+dr)   end
-  def dead_bullet()   @count_bullet-=1  ; p "deadb"           end
+  def dead_bullet()   @count_bullet-=1             end
   def count_bullet()  @count_bullet                end
   def fire()          (@count_bullet+=1 ; $app.creatBullet(self,@x,@y,@cdir)) if @count_bullet<6 end
   def fire_good?
@@ -34,7 +33,7 @@ class Tank < Mobile
   end
   def tir(condition,option,&blk)
      if condition  
-        puts "tir to #{option[:state]}..."
+        #puts "tir to #{option[:state]}..."
         to_state(option[:state])
         blk.call if blk
      end
