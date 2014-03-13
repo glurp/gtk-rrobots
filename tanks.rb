@@ -1,6 +1,58 @@
 # Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
 
 class TankGamer < Tank ; end
+
+class TankGenie2 < TankGamer
+ def initialize(x,y,coul="#FFAA66") 
+    super(x,y,coul) ; 
+    @v,@cradar,@cible,@tc= 11,0,-400,9999999
+    @s=rand(1)+1
+    turn(rand(360))
+  end
+  def tank?() true end
+  def common
+     pivot_by(45) if mindist?
+     turn_radar(@s*2)
+     @cdir=@cradar-@s*2
+     if fire_good? 
+		@cible=@cradar
+     end
+     move()
+  end
+  def tick(c)
+     common
+     tir((@cible-@cdir).abs<2 && count_bullet()<4 ,state: :a) { 	
+		 fire 
+	 }
+     tir((@cible-@cdir).abs<4 && count_bullet()>=4 ,state: nil) { 	
+       pivot_by -10
+       accelerate  1.3
+	 }
+     @v = 11 if @v>15
+  end
+  def tick_a(c)
+    common
+    @a=( (8.0*@a+@cible)/9.0 )
+    if c%2>=0
+      fire
+    end
+    tir( (@cible-@cdir).abs>3,state: :b) do
+       @s *= -1
+       @cible=999999999
+       @v=11
+    end
+  end
+  def tick_b(c)
+    common
+    accelerate 1.1
+    fire if c%2==0
+    tir( c>6,state: nil) do
+        @s *= -1
+        @v=11
+    end
+  end
+end
+
 class TankGenie < TankGamer
  def initialize(x,y,coul="#9999FF") 
     super(x,y,coul) ; 
@@ -74,16 +126,20 @@ class TankManuel < TankGamer
   def tank?() true end
 end
 
-class TankDuck < TankGamer
+class TankSimple < TankGamer
   def initialize(x,y,coul="#FF4444") 
     super(x,y,coul) ; 
+    @a=rand(0..360)
     @v= 3
-    @cradar=0
+    @cradar=@a
   end
   def tank?() true end
   def anim(c)
-     turn_to(4)
+     pivot_by(rand(15)) if mindist?
+     turn(1)
      move()
+     (fire;accelerate(1.1);turn(-1)) if fire_good?
+     accelerate(0.999)
   end
 end
 
