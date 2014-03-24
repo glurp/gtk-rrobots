@@ -12,12 +12,11 @@ API
 class template
 -----
     class MyThank < Tank
-     ....
-     def tick(time)
+     def tick(time)       # called when state==nill
         ..use thank api..
      end
      def tick_foo(time)   # called when state==foo
-        .... 
+        ....use thank api.. 
      end
     end
     MyThank  # !!! Indispensable !!!
@@ -32,19 +31,22 @@ direction are in degree (0..360), positions are in pixel,speed in pixel/tick
     x,y     thank position
     @v      thank speed
 
+    turn_radar(delta_direction)  # change radar direction
+    turn_cannon(delta_direction) # change cannon direction
+    
     pivot_by(delta_direction)    # change moving, direction dont'move cannon & radar direction
     turn(delta_direction)        # change moving direction with cannon and radar direction
     turn_to(direction)           # force current move direction
-    turn_radar(delta_direction)  # change radar direction
-    turn_cannon(delta_direction) # change cannon direction
     mindist?                     # true if game border is reach
+    move                         # apply speed to thank position/direction
+    
     fire_good?                   # true if there are (other familly) thank in radar direction
-    move                         # apply speed to thank position
-    fire                         # true fire a bullet, 6 max bullet can be active from une thank
-    count_bullet                 # number of active bullet (bullet fired by thank an not yet dead)
+    count_bullet                 # number of active bullet (bullet fired by thank and not yet dead)
+    fire                         # fire a bullet, done if count_bullet() is less than 6
+    
     accelerate(dv)
     tir(condition, state: cible) { action } # move to state name if condition is true
-                                          tick_<@state> wille be call next tick
+                                          tick_<@state> will be call next tick
 
 
 thank commented
@@ -76,6 +78,6 @@ thank commented
                                           
 bugs
 ----
-end game is not well detected !
+end of game is not well detected !
 @var should not be directly read/modified                                      
 
