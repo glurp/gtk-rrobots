@@ -1,7 +1,7 @@
 # Creative Commons BY-SA :  Regis d'Aubarede <regis.aubarede@gmail.com>
 
-require_relative '../Ruiby/lib/Ruiby'
-
+#require_relative '../Ruiby/lib/Ruiby'
+require 'Ruiby'
 require_relative 'mobile'
 require_relative 'tank'
 require_relative 'bullet'
@@ -49,15 +49,18 @@ Ruiby.app width: 300+$W, height: $H+50, title: "RRobots" do
 class T < Tank
   def initialize(x,y,coul="#4444FF") 
     super(x,y,coul) ; 
-    @v= 3
-    @cradar=0
+    @v= 10
+    @a=@cdir=@cradar=0
   end
   def tank?() true end
-  def anim(c)
-     turn_to(1)
+  def tick(c)
+     turn_to(2)
+     pivot_by(45) if mindist?
+     fire if fire_good? 
      move()
   end
 end
+T
 EEND
   $app=self
   @announce=""
