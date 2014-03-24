@@ -1,4 +1,6 @@
-0.9.5
+0.9.6
+    rrobots.rb : initiale player
+    README.md : initiale player
     README.md : api comments
     README.md : pi comments
     README.md : api documentation
